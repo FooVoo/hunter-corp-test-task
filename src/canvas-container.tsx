@@ -66,8 +66,6 @@ export default function CanvasContainer(props: CanvasContainerParams) {
 			balls.forEach(ball => {
 				if (isMouseCollision(position, ball)) {
 					selectBall(ball);
-				} else {
-					selectBall(null);
 				}
 			});
 		}

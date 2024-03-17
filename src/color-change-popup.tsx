@@ -19,10 +19,6 @@ export default function ColorChangePopup (props: ColorChangePopupProps) {
 		selectColor(event.target.value);
 	}
 
-	const onColorInput = (event: any) => {
-		console.debug(event);
-	}
-
 	return (
 		<div
 			className={'popup'}
@@ -33,7 +29,6 @@ export default function ColorChangePopup (props: ColorChangePopupProps) {
 				pattern={'#[0-F]{3}'}
 				maxLength={7}
 				minLength={4}
-				onInput={e => onColorInput(e)}
 				onChange={e => onColorChange(e)}
 			></input>
 			<button onClick={() => {
