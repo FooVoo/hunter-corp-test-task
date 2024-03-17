@@ -2,6 +2,7 @@
   "name": "hunter-corp-test",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://foovoo.github.io/hunter-corp-test-task/",
   "engines": {
     "node": "^18.16.0"
   },
