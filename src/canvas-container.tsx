@@ -17,25 +17,24 @@ const defaultStyles: CSSProperties = {
 export default function CanvasContainer(props: CanvasContainerParams) {
 	const [balls, setBalls] = useState<CircleObject[]>([]);
 	const [selectedBall, selectBall] = useState<CircleObject | null>(null);
-	const [timerIntervalId, setTimerIntervalId] = useState<NodeJS.Timer | null>(null);
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-	let canvasContext: any = null;
+	const [canvasContext, setCanvasContext] = useState<any>(null);
 	const [mouseCoords, mouseHandler] = useMouseMoveHandler();
 
-	const drawBall = (ball: Partial<CircleObject>, context: any) => {
+	const drawBall = useCallback((ball: Partial<CircleObject>, context: any) => {
 		if (!canvasContext) return;
 		context.beginPath();
 		context.fillStyle = ball.color;
 		context.arc(ball.position!.x, ball.position!.y, ball.radius!, 0, 2*Math.PI);
 		context.fill();
-	}
+	}, [canvasContext]);
 
-	const clearCanvas = () => {
+	const clearCanvas = useCallback(() => {
 		if (!canvasContext) return;
 		canvasContext.clearRect(0, 0, props.width, props.height);
-	}
+	}, [canvasContext, props.height, props.width]);
 
-	const redrawObjects = () => {
+	const redrawObjects = useCallback(() => {
 		if (!canvasContext) return;
 		clearCanvas();
 		balls.forEach((ball, idx, ballsArr) => {
@@ -50,7 +49,7 @@ export default function CanvasContainer(props: CanvasContainerParams) {
 			});
 			drawBall(ball, canvasContext);
 		});
-	}
+	}, [balls, canvasContext, clearCanvas, drawBall, mouseCoords]);
 
 	const onCanvasClick = (event: any) => {
 		let position = getPositionFromEvent(event);
@@ -67,8 +66,6 @@ export default function CanvasContainer(props: CanvasContainerParams) {
 			balls.forEach(ball => {
 				if (isMouseCollision(position, ball)) {
 					selectBall(ball);
-				} else {
-					selectBall(null);
 				}
 			});
 		}
@@ -79,9 +76,9 @@ export default function CanvasContainer(props: CanvasContainerParams) {
 	}
 
 	useEffect(() => {
-		canvasContext = canvasRef.current!.getContext('2d');
+		setCanvasContext(canvasRef.current!.getContext('2d'));
 		requestAnimationFrame(redrawObjects);
-	}, [canvasContext, mouseCoords]);
+	}, [canvasContext, mouseCoords, redrawObjects]);
 
 	return (
 		<div>
